@@ -41,9 +41,6 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-// До первой отрисовки ставим обои по времени суток посетителя — без мигания.
-const todScript = `(function(){var h=new Date().getHours();document.documentElement.dataset.tod=h>=6&&h<11?'morning':h>=11&&h<18?'day':h>=18&&h<22?'evening':'night'})()`;
-
 export default async function LocaleLayout({
   children,
   params,
@@ -54,10 +51,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: todScript }} />
-      </head>
+    <html lang={locale}>
       <body>{children}</body>
     </html>
   );

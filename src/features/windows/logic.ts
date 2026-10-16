@@ -3,7 +3,7 @@
  * Effector-модель (model.ts) только связывает эти функции с событиями.
  */
 
-export type AppKind = 'project' | 'finder' | 'early' | 'about' | 'ask' | 'terminal' | 'resume';
+export type AppKind = 'project' | 'finder' | 'early' | 'about' | 'ask' | 'terminal' | 'resume' | 'mail';
 
 export interface Rect {
   x: number;
@@ -40,13 +40,14 @@ export const MIN_W = 340;
 export const MIN_H = 220;
 
 export const DEFAULT_SIZE: Record<AppKind, { w: number; h: number }> = {
-  project: { w: 620, h: 640 },
-  finder: { w: 640, h: 380 },
-  early: { w: 640, h: 340 },
-  about: { w: 520, h: 420 },
-  ask: { w: 440, h: 520 },
-  terminal: { w: 600, h: 380 },
-  resume: { w: 760, h: 720 },
+  project: { w: 820, h: 660 },
+  finder: { w: 660, h: 400 },
+  early: { w: 620, h: 360 },
+  about: { w: 540, h: 440 },
+  ask: { w: 460, h: 560 },
+  terminal: { w: 620, h: 400 },
+  resume: { w: 760, h: 760 },
+  mail: { w: 600, h: 500 },
 };
 
 export const emptyState: WindowsState = { windows: [], zTop: 0 };
@@ -68,14 +69,15 @@ export function clampRect(r: Rect, vp: Viewport): Rect {
   return { x, y, w, h };
 }
 
+/** Новое окно — по центру рабочей области; следующие чуть смещаются, чтобы не лечь ровно друг на друга. */
 function cascadeRect(app: AppKind, index: number, vp: Viewport): Rect {
   const size = DEFAULT_SIZE[app];
   const area = workArea(vp);
   const w = Math.min(size.w, area.w);
   const h = Math.min(size.h, area.h);
-  const offset = (index % 6) * 28;
-  const x = Math.round(area.x + (area.w - w) / 2 - 80 + offset);
-  const y = Math.round(area.y + Math.max(0, (area.h - h) / 3) + offset);
+  const offset = (index % 5) * 24;
+  const x = Math.round(area.x + (area.w - w) / 2 + offset);
+  const y = Math.round(area.y + (area.h - h) / 2 + offset);
   return clampRect({ x, y, w, h }, vp);
 }
 

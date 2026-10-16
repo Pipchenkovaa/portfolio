@@ -53,6 +53,14 @@ for (const [i, file] of files.entries()) {
       .resize({ width: 1600 });
     await hero.clone().avif({ quality: 55, effort: 6 }).toFile(`${out}hero.avif`);
     await hero.clone().webp({ quality: 80 }).toFile(`${out}hero.webp`);
+    // Превью для иконки-файла на рабочем столе: 4:3, верх первого кадра.
+    const th = sharp(
+      await base
+        .clone()
+        .extract({ left: 0, top: 0, width, height: Math.min(Math.round((width * 3) / 4), height) })
+        .toBuffer(),
+    ).resize({ width: 320 });
+    await th.clone().webp({ quality: 82 }).toFile(`${out}thumb.webp`);
   }
 }
 console.log(JSON.stringify(gallery));

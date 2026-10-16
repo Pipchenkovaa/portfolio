@@ -1,9 +1,15 @@
 import type { Project } from '@/content/schema';
-import { LazyLoop } from './LazyLoop';
 import { pick, type Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
+import { LazyLoop } from './LazyLoop';
+import { ScreensStrip } from './ScreensStrip';
 
-/** Содержимое кейса. Без хуков — рендерится и на сервере (SEO, режим рекрутера), и в окне. */
+/** Длинное «что сделала» читается легче списком: делим по предложениям. */
+function sentences(text: string): string[] {
+  return text.split(/(?<=[.!?])\s+(?=[A-ZА-ЯЁ])/u).filter(Boolean);
+}
+
+/** Содержимое кейса. Рендерится и на сервере (SEO, режим рекрутера), и в окне. */
 export function ProjectView({
   project: p,
   locale,
@@ -21,9 +27,15 @@ export function ProjectView({
   const t = dict.project;
   const Title = level === 1 ? 'h1' : 'h2';
   const Sub = level === 1 ? 'h2' : 'h3';
+  const solution = sentences(pick(p.solution, locale));
+  const showResult = p.result || process.env.NODE_ENV !== 'production';
+
   return (
-    <article className="prose-case">
-      <div className="hero" style={{ background: `linear-gradient(135deg, ${p.cover.from}, ${p.cover.to})` }}>
+    <article className="case">
+      <div
+        className="case-hero"
+        style={{ background: `linear-gradient(135deg, ${p.cover.from}, ${p.cover.to})` }}
+      >
         {p.cover.loop ? (
           <LazyLoop src={p.cover.loop} poster={p.cover.hero ? `${p.cover.hero}.webp` : ''} label={p.title} />
         ) : p.cover.hero ? (
@@ -32,92 +44,88 @@ export function ProjectView({
             <img src={`${p.cover.hero}.webp`} alt="" decoding="async" />
           </picture>
         ) : (
-          <span className="hero-note">▶ {t.loopPlaceholder}</span>
+          <span className="case-hero-glyph" aria-hidden="true">
+            {p.cover.glyph}
+          </span>
         )}
       </div>
-      <Title id={headingId} className="case-title">
-        {p.title}
-      </Title>
-      <p style={{ color: 'var(--muted)', margin: '2px 0 12px' }}>
-        {pick(p.tagline, locale)} · {p.year}
-      </p>
-      {p.note && <p className="case-note">{pick(p.note, locale)}</p>}
-      <div className="chips">
-        {p.stack.map((s) => (
-          <span key={s}>{s}</span>
-        ))}
-      </div>
-      <Sub className="case-sub">{t.role}</Sub>
-      <p>{pick(p.role, locale)}</p>
-      <Sub className="case-sub">{t.problem}</Sub>
-      <p>{pick(p.problem, locale)}</p>
-      <Sub className="case-sub">{t.solution}</Sub>
-      <p>{pick(p.solution, locale)}</p>
-      {p.result ? (
-        <>
-          <Sub className="case-sub">{t.result}</Sub>
-          <p>{pick(p.result, locale)}</p>
-        </>
-      ) : process.env.NODE_ENV !== 'production' ? (
-        <>
-          <Sub className="case-sub">{t.result}</Sub>
-          <p>
-            <span className="draft">TODO: result / metric</span>
-          </p>
-        </>
-      ) : null}
-      {p.gallery.length > 0 && (
-        <>
-          <Sub className="case-sub">{t.screens}</Sub>
-          <div className="case-gallery">
-            {p.gallery.map((g) => (
-              <figure key={g.src}>
-                {g.video ? (
-                  <LazyLoop
-                    src={`${g.src}.mp4`}
-                    poster={`${g.src}-poster.webp`}
-                    label={pick(g.alt, locale)}
-                    width={g.width}
-                    height={g.height}
-                  />
-                ) : (
-                  <picture>
-                    <source
-                      type="image/avif"
-                      srcSet={`${g.src}-800.avif 800w, ${g.src}-1600.avif 1600w`}
-                      sizes="(max-width: 820px) 100vw, 780px"
-                    />
-                    <img
-                      src={`${g.src}-800.webp`}
-                      srcSet={`${g.src}-800.webp 800w, ${g.src}-1600.webp 1600w`}
-                      sizes="(max-width: 820px) 100vw, 780px"
-                      width={g.width}
-                      height={g.height}
-                      alt={pick(g.alt, locale)}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                )}
-                <figcaption>{pick(g.alt, locale)}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </>
-      )}
-      {(p.links.live || p.links.code) && (
-        <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
-          {p.links.live && (
-            <a className="btn" href={p.links.live} target="_blank" rel="noopener noreferrer">
-              {t.live} ↗
-            </a>
-          )}
-          {p.links.code && (
-            <a className="btn btn-ghost" href={p.links.code} target="_blank" rel="noopener noreferrer">
-              {t.code}
-            </a>
-          )}
+
+      <header className="case-head">
+        <div>
+          <Title id={headingId} className="case-title">
+            {p.title}
+          </Title>
+          <p className="case-tagline">{pick(p.tagline, locale)}</p>
         </div>
+        {(p.links.live || p.links.code) && (
+          <div className="case-actions">
+            {p.links.live && (
+              <a className="btn" href={p.links.live} target="_blank" rel="noopener noreferrer">
+                {t.live} ↗
+              </a>
+            )}
+            {p.links.code && (
+              <a className="btn btn-ghost" href={p.links.code} target="_blank" rel="noopener noreferrer">
+                {t.code}
+              </a>
+            )}
+          </div>
+        )}
+      </header>
+
+      {p.note && <p className="case-note">{pick(p.note, locale)}</p>}
+
+      <dl className="case-facts">
+        <div>
+          <dt>{t.role}</dt>
+          <dd>{pick(p.role, locale)}</dd>
+        </div>
+        <div>
+          <dt>{t.year}</dt>
+          <dd>{p.year}</dd>
+        </div>
+        <div className="wide">
+          <dt>{t.stack}</dt>
+          <dd className="chips">
+            {p.stack.map((s) => (
+              <span key={s}>{s}</span>
+            ))}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="case-text">
+        <section>
+          <Sub className="case-sub">{t.problem}</Sub>
+          <p>{pick(p.problem, locale)}</p>
+        </section>
+        <section className="case-solution">
+          <Sub className="case-sub">{t.solution}</Sub>
+          {solution.length > 1 ? (
+            <ul>
+              {solution.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>{solution[0]}</p>
+          )}
+        </section>
+        {showResult && (
+          <section>
+            <Sub className="case-sub">{t.result}</Sub>
+            <p>{p.result ? pick(p.result, locale) : <span className="draft">TODO: result / metric</span>}</p>
+          </section>
+        )}
+      </div>
+
+      {p.gallery.length > 0 && (
+        <section className="case-screens">
+          <Sub className="case-sub">
+            {t.screens} <small>{p.gallery.length}</small>
+          </Sub>
+          <ScreensStrip shots={p.gallery} locale={locale} dict={dict} />
+        </section>
       )}
     </article>
   );

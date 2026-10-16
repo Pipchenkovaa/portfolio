@@ -47,6 +47,7 @@ const raw = [
       to: '#4f7bff',
       glyph: 'IR',
       hero: '/media/atlas-ir/hero',
+      thumb: '/media/atlas-ir/thumb.webp',
       loop: '/media/atlas-ir/loop.mp4',
     },
     gallery: [
@@ -85,7 +86,7 @@ const raw = [
         },
       },
     ],
-    desktop: { x: 12, y: 16 },
+    desktop: { x: 22.2, y: 15.7 },
   },
   {
     slug: 'brainstorming',
@@ -114,7 +115,13 @@ const raw = [
       ru: 'Живое демо открывается, но генерация выключена: владелец продукта приостановил подписку на API.',
     },
     links: { live: 'https://brainstorming-beryl.vercel.app' },
-    cover: { from: '#ff5f6d', to: '#ffc371', glyph: 'Bs', hero: '/media/brainstorming/hero' },
+    cover: {
+      from: '#ff5f6d',
+      to: '#ffc371',
+      glyph: 'Bs',
+      hero: '/media/brainstorming/hero',
+      thumb: '/media/brainstorming/thumb.webp',
+    },
     gallery: [
       {
         src: '/media/brainstorming/1',
@@ -150,7 +157,7 @@ const raw = [
         },
       },
     ],
-    desktop: { x: 72, y: 14 },
+    desktop: { x: 67, y: 11.4 },
   },
   {
     slug: 'sdm-metall-prom',
@@ -179,7 +186,7 @@ const raw = [
     },
     links: { live: 'https://sdm-mp.ru', code: 'https://github.com/Pipchenkovaa/sdm-mp_v2' },
     cover: { from: '#2b2d31', to: '#9aa3ad', glyph: 'SD' },
-    desktop: { x: 22, y: 36 },
+    desktop: { x: 31.1, y: 35 },
   },
   {
     slug: 'fsk-lab',
@@ -201,7 +208,13 @@ const raw = [
       ru: 'Выпущено за 1 неделю. Компоненты используются отделом разработки ГК ФСК.',
     },
     links: {},
-    cover: { from: '#0a0a0a', to: '#e30613', glyph: '3D', hero: '/media/fsk-lab/hero' },
+    cover: {
+      from: '#0a0a0a',
+      to: '#e30613',
+      glyph: '3D',
+      hero: '/media/fsk-lab/hero',
+      thumb: '/media/fsk-lab/thumb.webp',
+    },
     note: {
       en: 'Screens below are my design concept. In production the pages were rebuilt on the components of a new design system.',
       ru: 'Экраны ниже — мой дизайн-концепт. В проде страницы собраны на компонентах новой дизайн-системы.',
@@ -229,7 +242,7 @@ const raw = [
         },
       },
     ],
-    desktop: { x: 82, y: 34 },
+    desktop: { x: 76.3, y: 31.7 },
   },
   {
     slug: 'linkspace',
@@ -254,8 +267,25 @@ const raw = [
     },
     result: null,
     links: { code: 'https://github.com/Pipchenkovaa/linkspace' },
-    cover: { from: '#00a86b', to: '#b9f6ca', glyph: 'LS' },
-    desktop: { x: 10, y: 56 },
+    cover: {
+      from: '#00a86b',
+      to: '#b9f6ca',
+      glyph: 'LS',
+      hero: '/media/linkspace/hero',
+      thumb: '/media/linkspace/thumb.webp',
+    },
+    gallery: [
+      {
+        src: '/media/linkspace/1',
+        width: 2634,
+        height: 1718,
+        alt: {
+          en: 'Library: collections, tag filters and link cards',
+          ru: 'Библиотека: коллекции, фильтры по тегам и карточки ссылок',
+        },
+      },
+    ],
+    desktop: { x: 23.6, y: 57 },
   },
 
   /* ---------- Early works (папка на рабочем столе) ---------- */

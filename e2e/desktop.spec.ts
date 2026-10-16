@@ -54,6 +54,39 @@ test.describe('desktop', () => {
     await expect(win.getByRole('link', { name: 'Parallax webpage' })).toBeVisible();
   });
 
+  test('marquee selects several icons and they move together', async ({ page }) => {
+    await page.goto('/en/');
+    await page.locator('html[data-ready]').waitFor({ state: 'attached' });
+    const atlas = page.locator('a.icon', { hasText: 'Atlas IR' });
+    const sdm = page.locator('a.icon', { hasText: 'SDM Metall Prom' });
+    const a0 = (await atlas.boundingBox())!;
+    const s0 = (await sdm.boundingBox())!;
+    await page.mouse.move(Math.min(a0.x, s0.x) - 20, a0.y - 10);
+    await page.mouse.down();
+    await page.mouse.move(Math.max(a0.x + a0.width, s0.x + s0.width) + 10, s0.y + s0.height - 20, {
+      steps: 6,
+    });
+    await page.mouse.up();
+    await expect(atlas).toHaveClass(/selected/);
+    await expect(sdm).toHaveClass(/selected/);
+    const art = (await atlas.locator('.icon-art').boundingBox())!;
+    await page.mouse.move(art.x + art.width / 2, art.y + art.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(art.x + art.width / 2 + 200, art.y + art.height / 2 + 60, { steps: 6 });
+    await page.mouse.up();
+    expect((await atlas.boundingBox())!.x).toBeGreaterThan(a0.x + 150);
+    expect((await sdm.boundingBox())!.x).toBeGreaterThan(s0.x + 150);
+    await expect(page.locator('.win')).toHaveCount(0); // перетаскивание не открывает окно
+  });
+
+  test('mail opens a compose window, not a form that sends data', async ({ page }) => {
+    await page.goto('/en/');
+    await page.getByRole('button', { name: 'Mail' }).first().click();
+    const win = page.locator('[data-window="mail"]');
+    await expect(win).toBeVisible();
+    await expect(win.getByText('pipchenkova0701@gmail.com')).toBeVisible();
+  });
+
   test('spotlight finds the hidden terminal', async ({ page }) => {
     await page.goto('/en/');
     await page.locator('html[data-ready]').waitFor({ state: 'attached' });

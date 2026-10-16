@@ -24,6 +24,8 @@ export const projectSchema = z.object({
     image: z.string().startsWith('/').optional(),
     /** /media/<slug>/loop.mp4 — короткий луп интерфейса для окна кейса */
     loop: z.string().startsWith('/').optional(),
+    /** /media/<slug>/thumb.webp — превью 4:3 для иконки-файла на рабочем столе */
+    thumb: z.string().startsWith('/').optional(),
     /** /media/<slug>/hero — база имени, файлы hero.avif/hero.webp готовит scripts/media.mjs */
     hero: z.string().startsWith('/').optional(),
   }),
@@ -40,7 +42,7 @@ export const projectSchema = z.object({
       }),
     )
     .default([]),
-  /** Позиция иконки на рабочем столе, в процентах от экрана. */
+  /** Позиция иконки на рабочем столе: x — центр иконки, y — её верх; в процентах от экрана. */
   desktop: z.object({ x: percent, y: percent }),
   /** main — иконка на рабочем столе; early — внутри папки «Early works». */
   group: z.enum(['main', 'early']).default('main'),

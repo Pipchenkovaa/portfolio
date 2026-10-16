@@ -22,28 +22,52 @@ import {
   windowRectChanged,
   windowZoomToggled,
 } from './model';
+import { getOrigin, type OriginRect } from './origin';
 
 const DIRS = ['n', 'e', 's', 'w', 'ne', 'nw', 'se', 'sw'] as const;
 type Dir = (typeof DIRS)[number];
+
+const EASE_OPEN = 'cubic-bezier(0.2, 0.9, 0.25, 1)';
+const EASE_CLOSE = 'cubic-bezier(0.4, 0, 0.7, 0.2)';
+
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** transform, который «сжимает» окно в прямоугольник-источник (иконку или док). */
+function toOrigin(el: HTMLElement, o: OriginRect): string {
+  const r = el.getBoundingClientRect();
+  const sx = Math.max(o.w / r.width, 0.04);
+  const sy = Math.max(o.h / r.height, 0.04);
+  const dx = o.x + o.w / 2 - (r.left + r.width / 2);
+  const dy = o.y + o.h / 2 - (r.top + r.height / 2);
+  return `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+}
+
+function dockOrigin(): OriginRect | undefined {
+  const dock = document.querySelector('.dock')?.getBoundingClientRect();
+  return dock ? { x: dock.left + dock.width / 2 - 24, y: dock.top, w: 48, h: 48 } : undefined;
+}
 
 export function Window({
   win,
   isTop,
   title,
   children,
+  bodyClassName,
 }: {
   win: WindowState;
   isTop: boolean;
   title: string;
   children: ReactNode;
+  bodyClassName?: string;
 }) {
   const { dict } = useI18n();
   const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const headingId = `${win.id.replace(':', '-')}-title`;
-  const [phase, setPhase] = useState<'open' | 'closing' | 'minimizing'>('open');
-  const [animating, setAnimating] = useState(false);
+  const [animatingRect, setAnimatingRect] = useState(false);
   const [gesture, setGesture] = useState<'drag' | 'resize' | null>(null);
+  const busy = useRef(false);
+  const fromDock = useRef(false);
   const api = useUnit({
     close: windowClosed,
     focus: windowFocused,
@@ -56,7 +80,6 @@ export function Window({
   // Окно пришло с сервера без координат — меряем его и дальше управляем в пикселях.
   useLayoutEffect(() => {
     if (win.rect || !ref.current) return;
-    // offset* не учитывают transform — меряем настоящий размер, а не кадр анимации появления.
     const el = ref.current;
     api.measured({
       id: win.id,
@@ -64,16 +87,81 @@ export function Window({
     });
   }, [win.rect, win.id, api]);
 
-  // Фокус в новое окно — для клавиатуры и скринридеров.
+  // Появление: как в macOS — окно вырастает из иконки, по которой кликнули (или из дока после сворачивания).
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || win.minimized) return;
+    if (reducedMotion()) return;
+    const origin = isMobile ? undefined : fromDock.current ? dockOrigin() : getOrigin(win.id);
+    fromDock.current = false;
+    const anim = origin
+      ? el.animate(
+          [
+            { transform: toOrigin(el, origin), opacity: 0.4 },
+            { transform: 'none', opacity: 1 },
+          ],
+          {
+            duration: 420,
+            easing: EASE_OPEN,
+          },
+        )
+      : el.animate(
+          isMobile
+            ? [{ transform: 'translateY(100%)' }, { transform: 'none' }]
+            : [
+                { transform: 'scale(0.94)', opacity: 0 },
+                { transform: 'none', opacity: 1 },
+              ],
+          { duration: isMobile ? 340 : 240, easing: EASE_OPEN },
+        );
+    return () => anim.cancel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- анимация только при появлении/разворачивании из дока
+  }, [win.minimized]);
+
   useEffect(() => {
     ref.current?.querySelector<HTMLElement>(`#${CSS.escape(headingId)}`)?.focus({ preventScroll: true });
   }, [headingId]);
 
-  if (win.minimized && phase !== 'minimizing') return null;
+  if (win.minimized) return null;
+
+  const animateOut = (target: 'origin' | 'dock', done: () => void) => {
+    const el = ref.current;
+    if (!el || busy.current) return;
+    if (reducedMotion()) return done();
+    busy.current = true;
+    const origin = isMobile ? undefined : target === 'dock' ? dockOrigin() : getOrigin(win.id);
+    const frames = isMobile
+      ? [{ transform: 'none' }, { transform: 'translateY(100%)' }]
+      : origin
+        ? [
+            { transform: 'none', opacity: 1 },
+            { transform: toOrigin(el, origin), opacity: target === 'dock' ? 0.6 : 0 },
+          ]
+        : [
+            { transform: 'none', opacity: 1 },
+            { transform: 'scale(0.94)', opacity: 0 },
+          ];
+    const anim = el.animate(frames, {
+      duration: isMobile ? 260 : target === 'dock' ? 380 : 300,
+      easing: EASE_CLOSE,
+      fill: 'forwards',
+    });
+    anim.onfinish = () => {
+      busy.current = false;
+      done();
+    };
+  };
+
+  const close = () => animateOut('origin', () => api.close(win.id));
+  const minimize = () =>
+    animateOut('dock', () => {
+      fromDock.current = true;
+      api.minimize(win.id);
+    });
 
   const startGesture = (e: RPointerEvent, kind: 'drag' | 'resize', dir?: Dir) => {
     if (isMobile || e.button !== 0 || !ref.current || !win.rect) return;
-    if (kind === 'drag' && (e.target as HTMLElement).closest('button, a')) return;
+    if (kind === 'drag' && (e.target as HTMLElement).closest('button, a, input')) return;
     e.preventDefault();
     const el = ref.current;
     const start = win.rect;
@@ -124,9 +212,9 @@ export function Window({
 
   const toggleZoom = () => {
     if (isMobile) return;
-    setAnimating(true);
+    setAnimatingRect(true);
     api.zoom({ id: win.id, vp: getViewport() });
-    window.setTimeout(() => setAnimating(false), 340);
+    window.setTimeout(() => setAnimatingRect(false), 340);
   };
 
   const style = win.rect
@@ -142,22 +230,12 @@ export function Window({
       data-unplaced={win.rect ? undefined : ''}
       className={clsx('win', {
         'is-top': isTop,
-        closing: phase === 'closing',
-        minimizing: phase === 'minimizing',
-        animating,
+        animating: animatingRect,
         dragging: gesture === 'drag',
         resizing: gesture === 'resize',
       })}
       style={style}
       onPointerDownCapture={() => !isTop && api.focus(win.id)}
-      onAnimationEnd={(e) => {
-        if (e.target !== e.currentTarget) return;
-        if (phase === 'closing') api.close(win.id);
-        if (phase === 'minimizing') {
-          setPhase('open');
-          api.minimize(win.id);
-        }
-      }}
     >
       <div
         className="titlebar"
@@ -165,20 +243,10 @@ export function Window({
         onDoubleClick={(e) => !(e.target as HTMLElement).closest('button') && toggleZoom()}
       >
         <div className="lights">
-          <button
-            type="button"
-            className="l-close"
-            aria-label={dict.window.close}
-            onClick={() => setPhase('closing')}
-          >
+          <button type="button" className="l-close" aria-label={dict.window.close} onClick={close}>
             <CloseGlyph />
           </button>
-          <button
-            type="button"
-            className="l-min"
-            aria-label={dict.window.minimize}
-            onClick={() => setPhase('minimizing')}
-          >
+          <button type="button" className="l-min" aria-label={dict.window.minimize} onClick={minimize}>
             <MinGlyph />
           </button>
           <button type="button" className="l-zoom" aria-label={dict.window.zoom} onClick={toggleZoom}>
@@ -188,16 +256,11 @@ export function Window({
         <div id={headingId} tabIndex={-1} className="win-title">
           {title}
         </div>
-        <button
-          type="button"
-          className="close-mobile"
-          aria-label={dict.window.close}
-          onClick={() => setPhase('closing')}
-        >
-          ✕
+        <button type="button" className="close-mobile" aria-label={dict.window.close} onClick={close}>
+          <CloseGlyph />
         </button>
       </div>
-      <div className="win-body">{children}</div>
+      <div className={clsx('win-body', bodyClassName)}>{children}</div>
       {!isMobile &&
         win.rect &&
         DIRS.map((d) => (

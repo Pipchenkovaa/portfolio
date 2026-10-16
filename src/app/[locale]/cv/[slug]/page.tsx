@@ -36,7 +36,7 @@ export default async function CvCase({ params }: { params: Params }) {
   const next = projects[(i + 1) % projects.length]!;
   return (
     <CvShell locale={locale} dict={dict} back={{ href: `/${locale}/cv/`, label: dict.project.allProjects }}>
-      <div className="[&_.prose-case]:!px-0 [&_.case-sub]:text-black/50">
+      <div className="cv-case">
         <ProjectView project={p} locale={locale} dict={dict} level={1} />
       </div>
       <nav className="mt-8 flex justify-between border-t border-black/5 pt-5 text-sm text-accent">

@@ -15,15 +15,15 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
   const dict = getDictionary(locale);
   return (
     <CvShell locale={locale} dict={dict} back={{ href: `/${locale}/`, label: dict.cv.back }}>
-      <h1 className="text-4xl font-bold tracking-tight">{pick(profile.name, locale)}</h1>
-      <p className="mt-1.5 mb-5 text-lg text-black/60">
+      <h1 className="text-5xl font-bold tracking-tight">{pick(profile.name, locale)}</h1>
+      <p className="mt-2 mb-6 text-xl text-black/60">
         {pick(profile.role, locale)} · {pick(profile.location, locale)}
       </p>
       <h2 className="sr-only">{dict.cv.skills}</h2>
       <ul className="chips mb-8">
         {profile.skills.map((s) => (
           <li key={s}>
-            <span className="!border-black/10">{s}</span>
+            <span>{s}</span>
           </li>
         ))}
       </ul>
@@ -35,37 +35,41 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
             <li key={p.slug}>
               <Link
                 href={`/${locale}/cv/${p.slug}/`}
-                className="group flex items-center gap-4 border-b border-black/5 py-4"
+                className="group flex items-center gap-5 border-b border-black/10 py-5 text-lg"
               >
                 <span
-                  className="size-14 flex-none rounded-lg"
-                  style={{ background: `linear-gradient(135deg, ${p.cover.from}, ${p.cover.to})` }}
+                  className="size-16 flex-none rounded-xl bg-cover bg-top"
+                  style={{
+                    background: p.cover.thumb
+                      ? `center top / cover no-repeat url(${p.cover.thumb})`
+                      : `linear-gradient(135deg, ${p.cover.from}, ${p.cover.to})`,
+                  }}
                 />
                 <span className="flex-1">
                   <b className="underline decoration-black/20 underline-offset-4 group-hover:decoration-black">
                     {p.title}
                   </b>{' '}
                   — {pick(p.tagline, locale)}
-                  <span className="block text-sm text-black/55">
+                  <span className="mt-0.5 block text-base text-black/55">
                     {pick(p.role, locale)} · {p.stack.join(', ')}
                   </span>
                 </span>
-                <span className="text-xl text-black/30" aria-hidden="true">
+                <span className="text-2xl text-black/30" aria-hidden="true">
                   ›
                 </span>
               </Link>
             </li>
           ))}
       </ul>
-      <h2 id="early-works" className="mt-10 mb-1 text-sm font-semibold tracking-wide text-black/50 uppercase">
+      <h2 id="early-works" className="mt-12 mb-1.5 text-2xl font-semibold tracking-tight">
         {dict.earlyWorks}
       </h2>
-      <p className="mb-2 text-sm text-black/50">{dict.earlyWorksNote}</p>
-      <ul className="text-sm">
+      <p className="mb-3 text-base text-black/55">{dict.earlyWorksNote}</p>
+      <ul className="text-base">
         {projects
           .filter((p) => p.group === 'early')
           .map((p) => (
-            <li key={p.slug} className="flex gap-2 border-b border-black/5 py-2.5">
+            <li key={p.slug} className="flex flex-wrap gap-x-2 border-b border-black/10 py-3.5">
               <Link
                 href={`/${locale}/cv/${p.slug}/`}
                 className="font-medium underline decoration-black/20 underline-offset-4"

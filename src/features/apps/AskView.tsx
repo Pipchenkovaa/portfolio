@@ -63,8 +63,8 @@ export function AskView() {
             key={m.id}
             className={
               m.from === 'me'
-                ? 'max-w-[82%] self-end rounded-2xl rounded-br-sm bg-accent px-3.5 py-2 text-sm text-white'
-                : 'max-w-[82%] rounded-2xl rounded-bl-sm bg-[var(--chip)] px-3.5 py-2 text-sm'
+                ? 'max-w-[82%] self-end rounded-2xl rounded-br-sm bg-accent px-3.5 py-2 text-[15px] text-white'
+                : 'max-w-[82%] rounded-2xl rounded-bl-sm bg-[var(--chip)] px-3.5 py-2 text-[15px]'
             }
           >
             {m.typing ? (
@@ -82,7 +82,7 @@ export function AskView() {
           <button
             key={s}
             type="button"
-            className="rounded-full border border-[var(--line)] px-2.5 py-1 text-xs"
+            className="rounded-full border border-[var(--line)] px-3 py-1.5 text-[13.5px]"
             onClick={() => ask(s)}
           >
             {s}
@@ -99,7 +99,7 @@ export function AskView() {
         }}
       >
         <input
-          className="flex-1 rounded-lg border border-[var(--line)] bg-transparent px-3 py-2 text-sm outline-none focus:border-accent"
+          className="flex-1 rounded-lg border border-[var(--line)] bg-transparent px-3 py-2 text-[15px] outline-none focus:border-accent"
           placeholder={t.placeholder}
           aria-label={t.placeholder}
           value={input}

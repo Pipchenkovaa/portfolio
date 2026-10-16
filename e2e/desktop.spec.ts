@@ -108,6 +108,20 @@ test.describe('mobile', () => {
     await win.getByRole('button', { name: 'Закрыть' }).last().tap();
     await expect(win).toHaveCount(0);
   });
+
+  test('early works open as an iOS folder, not a window', async ({ page }) => {
+    await page.goto('/ru/');
+    await page.waitForSelector('html[data-ready]');
+    await page.locator('.icon-early').tap();
+    const folder = page.getByRole('dialog', { name: 'Ранние работы' });
+    await expect(folder).toBeVisible();
+    await expect(page.locator('[data-window="early"]')).toHaveCount(0);
+    await folder.getByRole('link', { name: 'Parallax webpage' }).tap();
+    await expect(page.locator('[data-window="project:parallax"]')).toBeVisible();
+    await page.locator('[data-window="project:parallax"]').getByRole('button', { name: 'Закрыть' }).last().tap();
+    await folder.click({ position: { x: 12, y: 150 } });
+    await expect(folder).toHaveCount(0);
+  });
 });
 
 test('recruiter mode lists cases and opens them in place', async ({ page }) => {

@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import { CloseGlyph, MinGlyph, ZoomGlyph } from '@/shared/icons';
 import { useI18n } from '@/shared/i18n-context';
 import { getViewport, useIsMobile } from '@/shared/viewport';
-import { clampRect, MIN_H, MIN_W, type Rect, type WindowState } from './logic';
+import { clampRect, MENUBAR_H, MIN_H, MIN_W, type Rect, type WindowState } from './logic';
 import {
   windowClosed,
   windowFocused,
@@ -27,13 +27,14 @@ import { getOrigin, type OriginRect } from './origin';
 const DIRS = ['n', 'e', 's', 'w', 'ne', 'nw', 'se', 'sw'] as const;
 type Dir = (typeof DIRS)[number];
 
-const EASE_OPEN = 'cubic-bezier(0.2, 0.9, 0.25, 1)';
-const EASE_CLOSE = 'cubic-bezier(0.4, 0, 0.7, 0.2)';
+/** Мягкий выход без «пружины» и плавное ускорение на закрытии — как у окон macOS. */
+export const EASE_OPEN = 'cubic-bezier(0.22, 1, 0.36, 1)';
+export const EASE_CLOSE = 'cubic-bezier(0.5, 0, 0.75, 0.4)';
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** transform, который «сжимает» окно в прямоугольник-источник (иконку или док). */
-function toOrigin(el: HTMLElement, o: OriginRect): string {
+export function toOrigin(el: HTMLElement, o: OriginRect): string {
   const r = el.getBoundingClientRect();
   const sx = Math.max(o.w / r.width, 0.04);
   const sy = Math.max(o.h / r.height, 0.04);
@@ -101,7 +102,7 @@ export function Window({
             { transform: 'none', opacity: 1 },
           ],
           {
-            duration: 420,
+            duration: 520,
             easing: EASE_OPEN,
           },
         )
@@ -112,7 +113,7 @@ export function Window({
                 { transform: 'scale(0.94)', opacity: 0 },
                 { transform: 'none', opacity: 1 },
               ],
-          { duration: isMobile ? 340 : 240, easing: EASE_OPEN },
+          { duration: isMobile ? 460 : 320, easing: EASE_OPEN },
         );
     return () => anim.cancel();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- анимация только при появлении/разворачивании из дока
@@ -142,7 +143,7 @@ export function Window({
             { transform: 'scale(0.94)', opacity: 0 },
           ];
     const anim = el.animate(frames, {
-      duration: isMobile ? 260 : target === 'dock' ? 380 : 300,
+      duration: isMobile ? 320 : target === 'dock' ? 440 : 340,
       easing: EASE_CLOSE,
       fill: 'forwards',
     });
@@ -189,7 +190,7 @@ export function Window({
         }
         if (dir.includes('n')) {
           h = Math.max(MIN_H, start.h - dy);
-          y = Math.max(30, start.y + start.h - h);
+          y = Math.max(MENUBAR_H, start.y + start.h - h);
           h = start.y + start.h - y;
         }
         next = { x, y, w, h };
@@ -214,7 +215,7 @@ export function Window({
     if (isMobile) return;
     setAnimatingRect(true);
     api.zoom({ id: win.id, vp: getViewport() });
-    window.setTimeout(() => setAnimatingRect(false), 340);
+    window.setTimeout(() => setAnimatingRect(false), 460);
   };
 
   const style = win.rect

@@ -34,7 +34,7 @@ export interface Viewport {
   height: number;
 }
 
-export const MENUBAR_H = 30;
+export const MENUBAR_H = 36;
 export const DOCK_RESERVE = 96;
 export const MIN_W = 340;
 export const MIN_H = 220;

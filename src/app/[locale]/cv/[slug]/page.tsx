@@ -39,7 +39,7 @@ export default async function CvCase({ params }: { params: Params }) {
       <div className="cv-case">
         <ProjectView project={p} locale={locale} dict={dict} level={1} />
       </div>
-      <nav className="mt-8 flex justify-between border-t border-black/5 pt-5 text-sm text-accent">
+      <nav className="mt-10 flex justify-between gap-4 border-t border-black/10 pt-6 text-lg font-medium text-accent">
         <Link href={`/${locale}/cv/${prev.slug}/`}>← {prev.title}</Link>
         <Link href={`/${locale}/cv/${next.slug}/`}>{next.title} →</Link>
       </nav>

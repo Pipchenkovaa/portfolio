@@ -13,6 +13,8 @@ import { $windows } from '@/features/windows/model';
 import { Window } from '@/features/windows/Window';
 import { GenericFileIcon } from '@/shared/file-icons';
 import { useI18n } from '@/shared/i18n-context';
+import { useIsMobile } from '@/shared/viewport';
+import { IosFolder } from './IosFolder';
 import { useOpen } from './useOpen';
 import { useMailAction } from './useMailAction';
 
@@ -31,6 +33,7 @@ export function Windows() {
 function WindowFor({ win, isTop }: { win: WindowState; isTop: boolean }) {
   const { locale, dict } = useI18n();
   const mail = useMailAction();
+  const isMobile = useIsMobile();
   const headingId = `${win.id.replace(':', '-')}-content`;
 
   switch (win.app) {
@@ -50,6 +53,8 @@ function WindowFor({ win, isTop }: { win: WindowState; isTop: boolean }) {
         </Window>
       );
     case 'early':
+      // На телефоне папка открывается как папка iOS, а не как окно Finder.
+      if (isMobile) return <IosFolder win={win} />;
       return (
         <Window win={win} isTop={isTop} title={dict.earlyWorks}>
           <p className="finder-note">{dict.earlyWorksNote}</p>

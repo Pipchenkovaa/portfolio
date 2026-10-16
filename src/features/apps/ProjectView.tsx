@@ -50,13 +50,30 @@ export function ProjectView({
         )}
       </div>
 
-      <header className="case-head">
-        <div>
+      <div className="case-body">
+        <header className="case-head">
           <Title id={headingId} className="case-title">
             {p.title}
           </Title>
           <p className="case-tagline">{pick(p.tagline, locale)}</p>
-        </div>
+        </header>
+
+        <p className="case-meta">
+          <span>
+            {t.role}: <b>{pick(p.role, locale)}</b>
+          </span>
+          <span>
+            {t.year}: <b>{p.year}</b>
+          </span>
+        </p>
+        <ul className="chips case-stack" aria-label={t.stack}>
+          {p.stack.map((s) => (
+            <li key={s}>
+              <span>{s}</span>
+            </li>
+          ))}
+        </ul>
+
         {(p.links.live || p.links.code) && (
           <div className="case-actions">
             {p.links.live && (
@@ -71,35 +88,14 @@ export function ProjectView({
             )}
           </div>
         )}
-      </header>
 
-      {p.note && <p className="case-note">{pick(p.note, locale)}</p>}
+        {p.note && <p className="case-note">{pick(p.note, locale)}</p>}
 
-      <dl className="case-facts">
-        <div>
-          <dt>{t.role}</dt>
-          <dd>{pick(p.role, locale)}</dd>
-        </div>
-        <div>
-          <dt>{t.year}</dt>
-          <dd>{p.year}</dd>
-        </div>
-        <div className="wide">
-          <dt>{t.stack}</dt>
-          <dd className="chips">
-            {p.stack.map((s) => (
-              <span key={s}>{s}</span>
-            ))}
-          </dd>
-        </div>
-      </dl>
-
-      <div className="case-text">
-        <section>
+        <section className="case-section">
           <Sub className="case-sub">{t.problem}</Sub>
           <p>{pick(p.problem, locale)}</p>
         </section>
-        <section className="case-solution">
+        <section className="case-section">
           <Sub className="case-sub">{t.solution}</Sub>
           {solution.length > 1 ? (
             <ul>
@@ -112,7 +108,7 @@ export function ProjectView({
           )}
         </section>
         {showResult && (
-          <section>
+          <section className="case-section">
             <Sub className="case-sub">{t.result}</Sub>
             <p>{p.result ? pick(p.result, locale) : <span className="draft">TODO: result / metric</span>}</p>
           </section>

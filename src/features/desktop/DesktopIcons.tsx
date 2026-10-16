@@ -132,7 +132,7 @@ export function DesktopIcons() {
       starts.forEach((p, key) => {
         next[key] = {
           left: Math.max(0, Math.min(window.innerWidth - ICON_W, p.left + dx)),
-          top: Math.max(34, Math.min(window.innerHeight - 110, p.top + dy)),
+          top: Math.max(40, Math.min(window.innerHeight - 110, p.top + dy)),
         };
       });
       setPos((prev) => ({ ...prev, ...next }));

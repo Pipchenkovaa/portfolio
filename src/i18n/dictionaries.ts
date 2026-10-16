@@ -56,6 +56,8 @@ const en = {
   },
   terminal: { title: 'alina — zsh', hint: 'Type help to see commands.' },
   mobileHint: 'Tap an app',
+  earlyWorks: 'Early works',
+  earlyWorksNote: 'Study and pet projects from 2024 — kept to show the path.',
 } as const;
 
 type Shape<T> = {
@@ -128,6 +130,8 @@ const ru: Dictionary = {
   },
   terminal: { title: 'alina — zsh', hint: 'Введи help, чтобы увидеть команды.' },
   mobileHint: 'Нажми на приложение',
+  earlyWorks: 'Ранние работы',
+  earlyWorksNote: 'Учебные и пет-проекты 2024 года — оставлены, чтобы был виден путь.',
 };
 
 const dictionaries: Record<Locale, Dictionary> = { en, ru };

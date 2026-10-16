@@ -3,7 +3,7 @@
  * Effector-модель (model.ts) только связывает эти функции с событиями.
  */
 
-export type AppKind = 'project' | 'finder' | 'about' | 'ask' | 'terminal' | 'resume';
+export type AppKind = 'project' | 'finder' | 'early' | 'about' | 'ask' | 'terminal' | 'resume';
 
 export interface Rect {
   x: number;
@@ -42,6 +42,7 @@ export const MIN_H = 220;
 export const DEFAULT_SIZE: Record<AppKind, { w: number; h: number }> = {
   project: { w: 620, h: 640 },
   finder: { w: 640, h: 380 },
+  early: { w: 640, h: 340 },
   about: { w: 520, h: 420 },
   ask: { w: 440, h: 520 },
   terminal: { w: 600, h: 380 },

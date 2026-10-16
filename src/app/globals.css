@@ -241,6 +241,13 @@ body {
   z-index: 500;
   opacity: 0.85;
 }
+.icon:hover .cover.folder::after { content: none; }
+.icon .cover.folder {
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.25));
+}
 .icon.file .cover {
   background: #fff;
   border-radius: 3px;
@@ -558,6 +565,14 @@ body {
   padding: 3px 10px;
   border-radius: 99px;
   border: 1px solid var(--line);
+}
+.case-note {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--chip);
+  font-size: 13px;
+  color: var(--muted);
 }
 .draft {
   background: rgb(255 235 59 / 0.35);

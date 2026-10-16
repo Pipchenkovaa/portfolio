@@ -4,25 +4,25 @@ test.describe('desktop', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop-only behaviour');
 
   test('case page is server-rendered inside a window', async ({ page }) => {
-    await page.goto('/en/work/travly/');
-    const win = page.locator('[data-window="project:travly"]');
+    await page.goto('/en/work/atlas-ir/');
+    const win = page.locator('[data-window="project:atlas-ir"]');
     await expect(win).toBeVisible();
-    await expect(win.getByRole('heading', { name: 'Travly', level: 2 })).toBeVisible();
+    await expect(win.getByRole('heading', { name: 'Atlas IR', level: 2 })).toBeVisible();
   });
 
   test('opening a project updates the URL and back closes it', async ({ page }) => {
     await page.goto('/en/');
-    await page.getByRole('link', { name: 'Frontier' }).first().click();
-    await expect(page).toHaveURL(/\/en\/work\/frontier\/$/);
-    await expect(page.locator('[data-window="project:frontier"]')).toBeVisible();
+    await page.getByRole('link', { name: 'SDM Metall Prom' }).first().click();
+    await expect(page).toHaveURL(/\/en\/work\/sdm-metall-prom\/$/);
+    await expect(page.locator('[data-window="project:sdm-metall-prom"]')).toBeVisible();
     await page.goBack();
     await expect(page).toHaveURL(/\/en\/$/);
-    await expect(page.locator('[data-window="project:frontier"]')).toHaveCount(0);
+    await expect(page.locator('[data-window="project:sdm-metall-prom"]')).toHaveCount(0);
   });
 
   test('zoom fills the work area and restores', async ({ page }) => {
-    await page.goto('/en/work/travly/');
-    const win = page.locator('[data-window="project:travly"]');
+    await page.goto('/en/work/atlas-ir/');
+    const win = page.locator('[data-window="project:atlas-ir"]');
     await page.waitForTimeout(400); // дождаться анимации появления
     const before = await win.boundingBox();
     await win.getByRole('button', { name: 'Zoom' }).click();
@@ -34,8 +34,8 @@ test.describe('desktop', () => {
   });
 
   test('resize from the corner', async ({ page }) => {
-    await page.goto('/en/work/travly/');
-    const win = page.locator('[data-window="project:travly"]');
+    await page.goto('/en/work/atlas-ir/');
+    const win = page.locator('[data-window="project:atlas-ir"]');
     await page.waitForTimeout(400);
     const before = (await win.boundingBox())!;
     const handle = (await win.locator('.rh-se').boundingBox())!;
@@ -45,6 +45,13 @@ test.describe('desktop', () => {
     await page.mouse.up();
     const after = (await win.boundingBox())!;
     expect(after.width).toBeGreaterThan(before.width + 100);
+  });
+
+  test('early works folder lists study projects', async ({ page }) => {
+    await page.goto('/en/');
+    await page.getByRole('link', { name: 'Early works' }).click();
+    const win = page.locator('[data-window="early"]');
+    await expect(win.getByRole('link', { name: 'Parallax webpage' })).toBeVisible();
   });
 
   test('spotlight finds the hidden terminal', async ({ page }) => {
@@ -61,8 +68,8 @@ test.describe('mobile', () => {
 
   test('home screen opens a sheet with a close button', async ({ page }) => {
     await page.goto('/ru/');
-    await page.getByRole('link', { name: 'Travly' }).first().tap();
-    const win = page.locator('[data-window="project:travly"]');
+    await page.getByRole('link', { name: 'Atlas IR' }).first().tap();
+    const win = page.locator('[data-window="project:atlas-ir"]');
     await expect(win).toBeVisible();
     await win.getByRole('button', { name: 'Закрыть' }).last().tap();
     await expect(win).toHaveCount(0);
@@ -71,8 +78,8 @@ test.describe('mobile', () => {
 
 test('recruiter mode lists cases and opens them in place', async ({ page }) => {
   await page.goto('/en/cv/');
-  await page.getByRole('link', { name: /Travly/ }).click();
-  await expect(page).toHaveURL(/\/en\/cv\/travly\/$/);
-  await expect(page.getByRole('heading', { name: 'Travly' })).toBeVisible();
+  await page.getByRole('link', { name: /^Atlas IR —/ }).click();
+  await expect(page).toHaveURL(/\/en\/cv\/atlas-ir\/$/);
+  await expect(page.getByRole('heading', { name: 'Atlas IR' })).toBeVisible();
   await expect(page.locator('.win')).toHaveCount(0);
 });

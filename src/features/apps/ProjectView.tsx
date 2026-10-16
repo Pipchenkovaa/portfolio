@@ -46,6 +46,7 @@ export function ProjectView({
       <p style={{ color: 'var(--muted)', margin: '2px 0 12px' }}>
         {pick(p.tagline, locale)} · {p.year}
       </p>
+      {p.note && <p className="case-note">{pick(p.note, locale)}</p>}
       <div className="chips">
         {p.stack.map((s) => (
           <span key={s}>{s}</span>

@@ -147,15 +147,18 @@ function useClock(locale: Locale) {
 
 /* ---------------- desktop icons ---------------- */
 
-type IconItem = { kind: 'project'; project: Project } | { kind: 'about' } | { kind: 'resume' };
+type IconItem =
+  { kind: 'project'; project: Project } | { kind: 'early' } | { kind: 'about' } | { kind: 'resume' };
 
-const FILE_POS = { about: { x: 44, y: 64 }, resume: { x: 52, y: 74 } };
+const FILE_POS = { early: { x: 30, y: 62 }, about: { x: 44, y: 66 }, resume: { x: 52, y: 76 } };
+const mainProjects = projects.filter((p) => p.group === 'main');
 
 function DesktopIcons() {
   const { locale } = useI18n();
   const items: IconItem[] = useMemo(
     () => [
-      ...projects.map((p) => ({ kind: 'project', project: p }) as const),
+      ...mainProjects.map((p) => ({ kind: 'project', project: p }) as const),
+      { kind: 'early' },
       { kind: 'about' },
       { kind: 'resume' },
     ],
@@ -171,6 +174,7 @@ function DesktopIcons() {
 }
 
 function DesktopIcon({ item, locale }: { item: IconItem; locale: Locale }) {
+  const { dict } = useI18n();
   const open = useUnit(windowOpened);
   const isMobile = useIsMobile();
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
@@ -181,9 +185,17 @@ function DesktopIcon({ item, locale }: { item: IconItem; locale: Locale }) {
       ? `/${locale}/work/${item.project.slug}/`
       : item.kind === 'about'
         ? `/${locale}/about/`
-        : profile.resumePdf;
+        : item.kind === 'early'
+          ? `/${locale}/cv/#early-works`
+          : profile.resumePdf;
   const label =
-    item.kind === 'project' ? item.project.title : item.kind === 'about' ? 'about.txt' : 'Resume.pdf';
+    item.kind === 'project'
+      ? item.project.title
+      : item.kind === 'about'
+        ? 'about.txt'
+        : item.kind === 'early'
+          ? dict.earlyWorks
+          : 'Resume.pdf';
   const percent = item.kind === 'project' ? item.project.desktop : FILE_POS[item.kind];
 
   const onPointerDown = (e: RPointerEvent<HTMLAnchorElement>) => {
@@ -243,6 +255,10 @@ function DesktopIcon({ item, locale }: { item: IconItem; locale: Locale }) {
           <i />
         </span>
       </span>
+    ) : item.kind === 'early' ? (
+      <span className="cover folder">
+        <FolderIcon width={62} height={62} />
+      </span>
     ) : (
       <span className="cover">
         <span className="glyph">{item.kind === 'about' ? 'TXT' : 'PDF'}</span>
@@ -252,7 +268,7 @@ function DesktopIcon({ item, locale }: { item: IconItem; locale: Locale }) {
   return (
     <a
       href={href}
-      className={clsx('icon', item.kind !== 'project' && 'file')}
+      className={clsx('icon', (item.kind === 'about' || item.kind === 'resume') && 'file')}
       style={style}
       draggable={false}
       onPointerDown={onPointerDown}
@@ -297,7 +313,14 @@ function WindowFor({ win, isTop }: { win: WindowState; isTop: boolean }) {
     case 'finder':
       return (
         <Window win={win} isTop={isTop} title={dict.dock.projects}>
-          <FinderView />
+          <FinderView group="main" />
+        </Window>
+      );
+    case 'early':
+      return (
+        <Window win={win} isTop={isTop} title={dict.earlyWorks}>
+          <p className="px-5 pt-4 text-[13px] text-[var(--muted)]">{dict.earlyWorksNote}</p>
+          <FinderView group="early" />
         </Window>
       );
     case 'about':
@@ -343,31 +366,33 @@ function WindowFor({ win, isTop }: { win: WindowState; isTop: boolean }) {
   }
 }
 
-function FinderView() {
+function FinderView({ group }: { group: 'main' | 'early' }) {
   const { locale } = useI18n();
   const open = useUnit(windowOpened);
   return (
     <div className="in-finder grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-4 p-5">
-      {projects.map((p) => (
-        <a
-          key={p.slug}
-          className="icon"
-          href={`/${locale}/work/${p.slug}/`}
-          onClick={(e) => {
-            if (e.metaKey || e.ctrlKey) return;
-            e.preventDefault();
-            open({ app: 'project', slug: p.slug, vp: getViewport() });
-          }}
-        >
-          <span
-            className="cover"
-            style={{ background: `linear-gradient(135deg, ${p.cover.from}, ${p.cover.to})` }}
+      {projects
+        .filter((p) => p.group === group)
+        .map((p) => (
+          <a
+            key={p.slug}
+            className="icon"
+            href={`/${locale}/work/${p.slug}/`}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey) return;
+              e.preventDefault();
+              open({ app: 'project', slug: p.slug, vp: getViewport() });
+            }}
           >
-            <span className="glyph">{p.cover.glyph}</span>
-          </span>
-          <span className="label">{p.title}</span>
-        </a>
-      ))}
+            <span
+              className="cover"
+              style={{ background: `linear-gradient(135deg, ${p.cover.from}, ${p.cover.to})` }}
+            >
+              <span className="glyph">{p.cover.glyph}</span>
+            </span>
+            <span className="label">{p.title}</span>
+          </a>
+        ))}
     </div>
   );
 }

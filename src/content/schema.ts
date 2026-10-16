@@ -27,6 +27,10 @@ export const projectSchema = z.object({
   }),
   /** Позиция иконки на рабочем столе, в процентах от экрана. */
   desktop: z.object({ x: percent, y: percent }),
+  /** main — иконка на рабочем столе; early — внутри папки «Early works». */
+  group: z.enum(['main', 'early']).default('main'),
+  /** Честная пометка в кейсе: например, что живое демо работает не полностью. */
+  note: localized.optional(),
   placeholder: z.boolean().default(false),
 });
 

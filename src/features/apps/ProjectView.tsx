@@ -26,16 +26,19 @@ export function ProjectView({
         {p.cover.loop ? (
           <video
             src={p.cover.loop}
-            poster={p.cover.image}
+            poster={p.cover.hero && `${p.cover.hero}.webp`}
             autoPlay
             muted
             loop
             playsInline
             preload="metadata"
           />
-        ) : p.cover.image ? (
-          // eslint-disable-next-line @next/next/no-img-element -- статический экспорт, картинки оптимизируются заранее
-          <img src={p.cover.image} alt="" loading="lazy" decoding="async" />
+        ) : p.cover.hero ? (
+          <picture>
+            <source type="image/avif" srcSet={`${p.cover.hero}.avif`} />
+            { }
+            <img src={`${p.cover.hero}.webp`} alt="" decoding="async" />
+          </picture>
         ) : (
           <span className="hero-note">▶ {t.loopPlaceholder}</span>
         )}
@@ -71,6 +74,36 @@ export function ProjectView({
           </p>
         </>
       ) : null}
+      {p.gallery.length > 0 && (
+        <>
+          <Sub className="case-sub">{t.screens}</Sub>
+          <div className="case-gallery">
+            {p.gallery.map((g) => (
+              <figure key={g.src}>
+                <picture>
+                  <source
+                    type="image/avif"
+                    srcSet={`${g.src}-800.avif 800w, ${g.src}-1600.avif 1600w`}
+                    sizes="(max-width: 820px) 100vw, 780px"
+                  />
+                  { }
+                  <img
+                    src={`${g.src}-800.webp`}
+                    srcSet={`${g.src}-800.webp 800w, ${g.src}-1600.webp 1600w`}
+                    sizes="(max-width: 820px) 100vw, 780px"
+                    width={g.width}
+                    height={g.height}
+                    alt={pick(g.alt, locale)}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+                <figcaption>{pick(g.alt, locale)}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </>
+      )}
       {(p.links.live || p.links.code) && (
         <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
           {p.links.live && (

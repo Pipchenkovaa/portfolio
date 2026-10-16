@@ -23,6 +23,7 @@ const en = {
     code: 'Source code',
     allProjects: 'All projects',
     loopPlaceholder: 'Interface loop goes here',
+    screens: 'Screens',
   },
   cv: {
     back: 'Back to desktop',
@@ -98,6 +99,7 @@ const ru: Dictionary = {
     code: 'Исходный код',
     allProjects: 'Все проекты',
     loopPlaceholder: 'Здесь будет видео интерфейса',
+    screens: 'Экраны',
   },
   cv: {
     back: 'На рабочий стол',

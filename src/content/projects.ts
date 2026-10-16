@@ -72,7 +72,42 @@ const raw = [
       ru: 'Живое демо открывается, но генерация выключена: владелец продукта приостановил подписку на API.',
     },
     links: { live: 'https://brainstorming-beryl.vercel.app' },
-    cover: { from: '#ff5f6d', to: '#ffc371', glyph: 'Bs' },
+    cover: { from: '#ff5f6d', to: '#ffc371', glyph: 'Bs', hero: '/media/brainstorming/hero' },
+    gallery: [
+      {
+        src: '/media/brainstorming/1',
+        width: 1024,
+        height: 1454,
+        alt: {
+          en: 'Step 1: the idea goes in, the model returns groups of directions',
+          ru: 'Шаг 1: на входе идея, модель возвращает группы направлений',
+        },
+      },
+      {
+        src: '/media/brainstorming/2',
+        width: 1024,
+        height: 1346,
+        alt: { en: 'Choosing directions inside each group', ru: 'Выбор направлений внутри каждой группы' },
+      },
+      {
+        src: '/media/brainstorming/3',
+        width: 1024,
+        height: 1402,
+        alt: {
+          en: 'Selection is locked while the concept is generated',
+          ru: 'Выбор зафиксирован, пока генерируется концепт',
+        },
+      },
+      {
+        src: '/media/brainstorming/4',
+        width: 1526,
+        height: 1402,
+        alt: {
+          en: 'Final creative directions: each card loads its image independently',
+          ru: 'Итоговые креативные направления: каждая карточка грузит свою картинку независимо',
+        },
+      },
+    ],
     desktop: { x: 72, y: 14 },
   },
   {
@@ -124,7 +159,34 @@ const raw = [
       ru: 'Выпущено за 1 неделю. Компоненты используются отделом разработки ГК ФСК.',
     },
     links: {},
-    cover: { from: '#0a0a0a', to: '#e30613', glyph: '3D' },
+    cover: { from: '#0a0a0a', to: '#e30613', glyph: '3D', hero: '/media/fsk-lab/hero' },
+    note: {
+      en: 'Screens below are my design concept. In production the pages were rebuilt on the components of a new design system.',
+      ru: 'Экраны ниже — мой дизайн-концепт. В проде страницы собраны на компонентах новой дизайн-системы.',
+    },
+    gallery: [
+      {
+        src: '/media/fsk-lab/1',
+        width: 1916,
+        height: 6506,
+        alt: { en: 'Dynamic pricing — product page', ru: 'Динамическое ценообразование — страница продукта' },
+      },
+      {
+        src: '/media/fsk-lab/2',
+        width: 1916,
+        height: 7534,
+        alt: { en: 'Agent account — product page', ru: 'Личный кабинет агента — страница продукта' },
+      },
+      {
+        src: '/media/fsk-lab/3',
+        width: 1916,
+        height: 7712,
+        alt: {
+          en: 'FSK Element materials marketplace — product page',
+          ru: 'FSK Element, маркетплейс материалов — страница продукта',
+        },
+      },
+    ],
     desktop: { x: 82, y: 34 },
   },
   {

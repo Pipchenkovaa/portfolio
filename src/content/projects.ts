@@ -43,7 +43,7 @@ const raw = [
     },
     links: { live: 'https://atlas-ir.com' },
     cover: { from: '#0b1f4d', to: '#4f7bff', glyph: 'IR' },
-    desktop: { x: 14, y: 18 },
+    desktop: { x: 12, y: 16 },
   },
   {
     slug: 'brainstorming',
@@ -53,7 +53,10 @@ const raw = [
       en: 'Iterative AI image generation: from an idea to concepts to images',
       ru: 'Итеративная AI-генерация изображений: от идеи к концептам и картинкам',
     },
-    role: { en: 'Frontend developer · Atlas IR product', ru: 'Фронтенд-разработчик · продукт Atlas IR' },
+    role: {
+      en: 'Freelance frontend developer · standalone product, planned as part of Atlas IR',
+      ru: 'Фронтенд-разработчик, фриланс · отдельный продукт, задуманный как часть Atlas IR',
+    },
     stack: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Cerebras API', 'OpenAI', 'Krea'],
     problem: {
       en: 'Generation takes from seconds to minutes, and people want to launch several runs in a row without losing track of any.',
@@ -70,7 +73,7 @@ const raw = [
     },
     links: { live: 'https://brainstorming-beryl.vercel.app' },
     cover: { from: '#ff5f6d', to: '#ffc371', glyph: 'Bs' },
-    desktop: { x: 70, y: 20 },
+    desktop: { x: 72, y: 14 },
   },
   {
     slug: 'sdm-metall-prom',
@@ -99,7 +102,7 @@ const raw = [
     },
     links: { live: 'https://sdm-mp.ru', code: 'https://github.com/Pipchenkovaa/sdm-mp_v2' },
     cover: { from: '#2b2d31', to: '#9aa3ad', glyph: 'SD' },
-    desktop: { x: 26, y: 40 },
+    desktop: { x: 22, y: 36 },
   },
   {
     slug: 'fsk-lab',
@@ -122,7 +125,7 @@ const raw = [
     },
     links: {},
     cover: { from: '#0a0a0a', to: '#e30613', glyph: '3D' },
-    desktop: { x: 62, y: 46 },
+    desktop: { x: 82, y: 34 },
   },
   {
     slug: 'linkspace',
@@ -148,7 +151,7 @@ const raw = [
     result: null,
     links: { code: 'https://github.com/Pipchenkovaa/linkspace' },
     cover: { from: '#00a86b', to: '#b9f6ca', glyph: 'LS' },
-    desktop: { x: 40, y: 14 },
+    desktop: { x: 10, y: 56 },
   },
 
   /* ---------- Early works (папка на рабочем столе) ---------- */

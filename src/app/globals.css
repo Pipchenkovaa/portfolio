@@ -12,7 +12,8 @@
   --bg2: #e9e6e0;
   --blob: #2a2622;
   --cap: #b9b6d9;
-  --label: #fff;
+  --label: #1d1b19;
+  --label-shadow: 0 0 6px rgb(255 255 255 / 0.9), 0 0 2px rgb(255 255 255 / 0.9);
   --win: #fbfbfa;
   --win-text: #1b1b1b;
   --muted: #6b6b6b;
@@ -33,6 +34,8 @@
   --blob: #3a1e2a;
 }
 [data-tod='night'] {
+  --label: #fff;
+  --label-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
   --bg1: #1a1d2b;
   --bg2: #0d0f18;
   --blob: #6c7cff;
@@ -70,67 +73,38 @@ body {
   background: radial-gradient(120% 90% at 50% 20%, var(--bg1), var(--bg2));
   transition: background 0.8s;
 }
-.silhouette {
+.wallpaper {
   position: absolute;
-  left: 50%;
-  top: 52%;
-  translate: -50% -50%;
-  width: min(70vw, 760px);
-  height: min(90vh, 820px);
+  inset: 0;
   pointer-events: none;
-  filter: blur(34px);
-  opacity: 0.85;
 }
-.silhouette i {
+.wallpaper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+/* Фото дневное; утро, вечер и ночь — тонировка поверх, без отдельных снимков. */
+.wallpaper-tint {
   position: absolute;
-  display: block;
+  inset: 0;
+  transition:
+    background 0.8s,
+    opacity 0.8s;
+  mix-blend-mode: multiply;
+  opacity: 0;
 }
-.silhouette .s-body {
-  left: 4%;
-  top: 55%;
-  width: 92%;
-  height: 60%;
-  border-radius: 50% 50% 0 0;
-  background: var(--blob);
+[data-tod='morning'] .wallpaper-tint {
+  opacity: 1;
+  background: linear-gradient(180deg, #e6efff, #f4f7ff);
 }
-.silhouette .s-head {
-  left: 28%;
-  top: 6%;
-  width: 44%;
-  height: 46%;
-  border-radius: 48% 52% 45% 55%;
-  background: var(--blob);
-  opacity: 0.8;
+[data-tod='evening'] .wallpaper-tint {
+  opacity: 1;
+  background: linear-gradient(180deg, #f2b98f, #d98a7a);
 }
-.silhouette .s-cap {
-  left: 24%;
-  top: 2%;
-  width: 54%;
-  height: 18%;
-  border-radius: 50% 50% 20% 20%;
-  background: var(--cap);
-  opacity: 0.9;
-}
-.bigname::before {
-  content: attr(data-text);
-}
-.bigname {
-  position: absolute;
-  inset: auto 0 -2vw;
-  text-align: center;
-  font-family:
-    system-ui,
-    -apple-system,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  font-weight: 800;
-  font-size: 18vw;
-  letter-spacing: -0.06em;
-  color: var(--blob);
-  opacity: 0.06;
-  pointer-events: none;
-  user-select: none;
+[data-tod='night'] .wallpaper-tint {
+  opacity: 1;
+  background: linear-gradient(180deg, #5560a8, #262b52);
 }
 
 .icon {
@@ -234,14 +208,16 @@ body {
   text-transform: uppercase;
   text-align: center;
   color: var(--label);
-  text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
+  text-shadow: var(--label-shadow);
   line-height: 1.15;
 }
 .icon.dragging {
   z-index: 500;
   opacity: 0.85;
 }
-.icon:hover .cover.folder::after { content: none; }
+.icon:hover .cover.folder::after {
+  content: none;
+}
 .icon .cover.folder {
   background: none;
   box-shadow: none;
@@ -786,9 +762,6 @@ body {
 
 /* ---------- mobile: домашний экран iOS ---------- */
 @media (max-width: 720px) {
-  .silhouette {
-    width: 120vw;
-  }
   .icons {
     position: absolute;
     inset: 44px 0 100px;

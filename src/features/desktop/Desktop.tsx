@@ -55,6 +55,7 @@ export function Desktop() {
     };
     window.addEventListener('keydown', onKey);
     window.addEventListener('popstate', onPop);
+    document.documentElement.dataset.ready = '1'; // сигнал для e2e: обработчики навешены
     return () => {
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('popstate', onPop);
@@ -63,12 +64,7 @@ export function Desktop() {
 
   return (
     <div className="desktop">
-      <div className="silhouette" aria-hidden="true">
-        <i className="s-body" />
-        <i className="s-head" />
-        <i className="s-cap" />
-      </div>
-      <div className="bigname" aria-hidden="true" data-text="PIPCHENKOVA" />
+      <Wallpaper />
       <MenuBar />
       <main>
         <h1 className="sr-only">
@@ -80,6 +76,44 @@ export function Desktop() {
       <Dock />
       <Spotlight />
       <Notices />
+    </div>
+  );
+}
+
+/* ---------------- wallpaper ---------------- */
+
+const W = '/wallpaper';
+/** Фото на обоях. Отдельный портретный кроп для телефона, AVIF → WebP → JPEG; это LCP-картинка, грузим сразу. */
+function Wallpaper() {
+  return (
+    <div className="wallpaper" aria-hidden="true">
+      <picture>
+        <source
+          media="(max-width: 720px)"
+          type="image/avif"
+          srcSet={`${W}/mobile-780.avif 780w, ${W}/mobile-1170.avif 1170w`}
+          sizes="100vw"
+        />
+        <source
+          media="(max-width: 720px)"
+          type="image/webp"
+          srcSet={`${W}/mobile-780.webp 780w, ${W}/mobile-1170.webp 1170w`}
+          sizes="100vw"
+        />
+        <source
+          type="image/avif"
+          srcSet={[1280, 1920, 2560, 3200].map((w) => `${W}/desktop-${w}.avif ${w}w`).join(', ')}
+          sizes="100vw"
+        />
+        <source
+          type="image/webp"
+          srcSet={[1280, 1920, 2560, 3200].map((w) => `${W}/desktop-${w}.webp ${w}w`).join(', ')}
+          sizes="100vw"
+        />
+        {}
+        <img src={`${W}/desktop-1920.jpg`} alt="" fetchPriority="high" decoding="async" />
+      </picture>
+      <div className="wallpaper-tint" />
     </div>
   );
 }
@@ -150,7 +184,7 @@ function useClock(locale: Locale) {
 type IconItem =
   { kind: 'project'; project: Project } | { kind: 'early' } | { kind: 'about' } | { kind: 'resume' };
 
-const FILE_POS = { early: { x: 30, y: 62 }, about: { x: 44, y: 66 }, resume: { x: 52, y: 76 } };
+const FILE_POS = { early: { x: 24, y: 70 }, about: { x: 70, y: 60 }, resume: { x: 84, y: 70 } };
 const mainProjects = projects.filter((p) => p.group === 'main');
 
 function DesktopIcons() {

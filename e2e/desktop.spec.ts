@@ -56,6 +56,7 @@ test.describe('desktop', () => {
 
   test('spotlight finds the hidden terminal', async ({ page }) => {
     await page.goto('/en/');
+    await page.locator('html[data-ready]').waitFor({ state: 'attached' });
     await page.keyboard.press('ControlOrMeta+k');
     await page.getByRole('combobox').fill('terminal');
     await page.keyboard.press('Enter');

@@ -42,7 +42,49 @@ const raw = [
       ru: 'Новые экраны собираются из готовых блоков. Провела регрессионное тестирование перед 3 релизами.',
     },
     links: { live: 'https://atlas-ir.com' },
-    cover: { from: '#0b1f4d', to: '#4f7bff', glyph: 'IR' },
+    cover: {
+      from: '#0b1f4d',
+      to: '#4f7bff',
+      glyph: 'IR',
+      hero: '/media/atlas-ir/hero',
+      loop: '/media/atlas-ir/loop.mp4',
+    },
+    gallery: [
+      {
+        src: '/media/atlas-ir/responsive',
+        width: 1200,
+        height: 1192,
+        video: true,
+        alt: {
+          en: 'One adaptive grid: resizing the layout through the breakpoints',
+          ru: 'Единая адаптивная сетка: макет перестраивается на брейкпоинтах',
+        },
+      },
+      {
+        src: '/media/atlas-ir/1',
+        width: 3024,
+        height: 1888,
+        alt: { en: 'Home: who we are and IR packages', ru: 'Главная: о компании и IR-пакеты' },
+      },
+      {
+        src: '/media/atlas-ir/2',
+        width: 3024,
+        height: 1888,
+        alt: {
+          en: 'Packages and the services marketplace — cards built from the UI kit',
+          ru: 'Пакеты и маркетплейс услуг — карточки собраны из UI-Kit',
+        },
+      },
+      {
+        src: '/media/atlas-ir/3',
+        width: 3024,
+        height: 1888,
+        alt: {
+          en: 'Contact form with the preferred contact method and masked inputs',
+          ru: 'Форма связи с выбором способа связи и масками ввода',
+        },
+      },
+    ],
     desktop: { x: 12, y: 16 },
   },
   {

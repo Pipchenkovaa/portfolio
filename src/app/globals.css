@@ -561,6 +561,13 @@ body {
   gap: 18px;
   margin-top: 8px;
 }
+.case-gallery video {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--line);
+  background: var(--chip);
+}
 .case-gallery img {
   width: 100%;
   height: auto;

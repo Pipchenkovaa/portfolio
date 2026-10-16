@@ -35,6 +35,8 @@ export const projectSchema = z.object({
         width: z.number().int(),
         height: z.number().int(),
         alt: localized,
+        /** true — это видео: <src>.mp4 + <src>-poster.webp */
+        video: z.boolean().default(false),
       }),
     )
     .default([]),

@@ -1,4 +1,5 @@
 import type { Project } from '@/content/schema';
+import { LazyLoop } from './LazyLoop';
 import { pick, type Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 
@@ -24,19 +25,10 @@ export function ProjectView({
     <article className="prose-case">
       <div className="hero" style={{ background: `linear-gradient(135deg, ${p.cover.from}, ${p.cover.to})` }}>
         {p.cover.loop ? (
-          <video
-            src={p.cover.loop}
-            poster={p.cover.hero && `${p.cover.hero}.webp`}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
+          <LazyLoop src={p.cover.loop} poster={p.cover.hero ? `${p.cover.hero}.webp` : ''} label={p.title} />
         ) : p.cover.hero ? (
           <picture>
             <source type="image/avif" srcSet={`${p.cover.hero}.avif`} />
-            { }
             <img src={`${p.cover.hero}.webp`} alt="" decoding="async" />
           </picture>
         ) : (
@@ -80,24 +72,33 @@ export function ProjectView({
           <div className="case-gallery">
             {p.gallery.map((g) => (
               <figure key={g.src}>
-                <picture>
-                  <source
-                    type="image/avif"
-                    srcSet={`${g.src}-800.avif 800w, ${g.src}-1600.avif 1600w`}
-                    sizes="(max-width: 820px) 100vw, 780px"
-                  />
-                  { }
-                  <img
-                    src={`${g.src}-800.webp`}
-                    srcSet={`${g.src}-800.webp 800w, ${g.src}-1600.webp 1600w`}
-                    sizes="(max-width: 820px) 100vw, 780px"
+                {g.video ? (
+                  <LazyLoop
+                    src={`${g.src}.mp4`}
+                    poster={`${g.src}-poster.webp`}
+                    label={pick(g.alt, locale)}
                     width={g.width}
                     height={g.height}
-                    alt={pick(g.alt, locale)}
-                    loading="lazy"
-                    decoding="async"
                   />
-                </picture>
+                ) : (
+                  <picture>
+                    <source
+                      type="image/avif"
+                      srcSet={`${g.src}-800.avif 800w, ${g.src}-1600.avif 1600w`}
+                      sizes="(max-width: 820px) 100vw, 780px"
+                    />
+                    <img
+                      src={`${g.src}-800.webp`}
+                      srcSet={`${g.src}-800.webp 800w, ${g.src}-1600.webp 1600w`}
+                      sizes="(max-width: 820px) 100vw, 780px"
+                      width={g.width}
+                      height={g.height}
+                      alt={pick(g.alt, locale)}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                )}
                 <figcaption>{pick(g.alt, locale)}</figcaption>
               </figure>
             ))}

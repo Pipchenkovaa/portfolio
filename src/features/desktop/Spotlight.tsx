@@ -85,6 +85,13 @@ function SpotlightPanel() {
         run: () => open({ app: 'mail', vp: vp() }),
       },
       {
+        key: 'code',
+        label: dict.dock.code,
+        hint: s.app,
+        text: 'vs code vscode source код исходник github ide',
+        run: () => open({ app: 'code', vp: vp() }),
+      },
+      {
         key: 'terminal',
         label: 'Terminal',
         hint: s.hidden,

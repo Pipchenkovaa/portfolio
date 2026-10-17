@@ -6,8 +6,8 @@ import { profile } from '@/content/profile';
 import { projects } from '@/content/projects';
 import type { Project } from '@/content/schema';
 import type { Locale } from '@/i18n/config';
-import { NotesAppIcon, ProjectAppIcon, ResumeAppIcon } from '@/shared/app-icons';
-import { GenericFileIcon, PdfFileIcon, PufferFolderIcon, TextFileIcon } from '@/shared/file-icons';
+import { DocAppIcon, ImageDocIcon, ProjectAppIcon } from '@/shared/app-icons';
+import { GenericFileIcon } from '@/shared/file-icons';
 import { useI18n } from '@/shared/i18n-context';
 import { useIsMobile } from '@/shared/viewport';
 import { useOpen } from './useOpen';
@@ -227,6 +227,7 @@ function DeskArt({ it }: { it: Item }) {
   switch (it.kind) {
     case 'project': {
       const c = it.project.cover;
+      if (c.icon) return <ImageDocIcon base={c.icon.desk} height={84} />;
       return c.thumb ? (
         <span className="file-thumb">
           <img src={c.thumb} alt="" width={160} height={120} decoding="async" draggable={false} />
@@ -236,11 +237,11 @@ function DeskArt({ it }: { it: Item }) {
       );
     }
     case 'early':
-      return <PufferFolderIcon size={84} />;
+      return <ImageDocIcon base="/icons/folder-early" height={72} />;
     case 'about':
-      return <TextFileIcon />;
+      return <ImageDocIcon base="/icons/about-txt" height={80} />;
     case 'resume':
-      return <PdfFileIcon preview="/media/resume-thumb.webp" />;
+      return <ImageDocIcon base="/icons/pdf" height={80} />;
   }
 }
 
@@ -248,6 +249,7 @@ function PhoneArt({ it }: { it: Item }) {
   switch (it.kind) {
     case 'project': {
       const c = it.project.cover;
+      if (c.icon) return <DocAppIcon base={c.icon.phone ?? c.icon.desk} />;
       return (
         <ProjectAppIcon {...(c.thumb ? { thumb: c.thumb } : {})} from={c.from} to={c.to} glyph={c.glyph} />
       );
@@ -267,8 +269,8 @@ function PhoneArt({ it }: { it: Item }) {
         </span>
       );
     case 'about':
-      return <NotesAppIcon size={60} />;
+      return <DocAppIcon base="/icons/about-txt" />;
     case 'resume':
-      return <ResumeAppIcon size={60} />;
+      return <DocAppIcon base="/icons/pdf" />;
   }
 }

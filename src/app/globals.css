@@ -1054,6 +1054,240 @@ body {
   border-radius: 4px;
 }
 
+/* ---------- растровые иконки (исходники Алины) ---------- */
+.app-img {
+  display: block;
+  width: var(--icon-size, 54px);
+  height: var(--icon-size, 54px);
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1.5px rgb(0 0 0 / 0.16)) drop-shadow(0 4px 8px rgb(0 0 0 / 0.12));
+  -webkit-user-drag: none;
+}
+.dock-item .app-img {
+  width: 54px;
+  height: 54px;
+}
+.doc-img {
+  display: block;
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.18));
+  -webkit-user-drag: none;
+}
+.icon-art .doc-img {
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.2));
+}
+
+/* ---------- VS Code: исходник сайта (светлая тема Light+) ---------- */
+.vsc {
+  container: vsc / inline-size;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  background: #fff;
+  color: #3b3b3b;
+  font-size: 13.5px;
+}
+.vsc-side {
+  overflow: auto;
+  background: #f8f8f8;
+  border-right: 0.5px solid #e5e5e5;
+  padding-bottom: 12px;
+}
+.vsc-side-title {
+  padding: 12px 14px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6f6f6f;
+}
+.vsc-tree ul {
+  margin: 0;
+}
+.vsc-dir,
+.vsc-file {
+  width: 100%;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 10px;
+  white-space: nowrap;
+  text-align: left;
+}
+.vsc-dir {
+  font-weight: 600;
+  color: #3b3b3b;
+  cursor: default;
+}
+.vsc-dir > span {
+  font-size: 11px;
+  opacity: 0.6;
+}
+.vsc-file {
+  color: #3b3b3b;
+  transition: background-color 0.12s var(--ease);
+}
+.vsc-file:hover {
+  background: #e8e8e8;
+}
+.vsc-file.active {
+  background: #e4e6f1;
+  box-shadow: inset 2px 0 0 #005fb8;
+}
+.vsc-glyph {
+  width: 16px;
+  flex: none;
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+}
+.vsc-muted {
+  padding: 4px 14px;
+  color: #8a8a8a;
+}
+.vsc-main {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.vsc-tabs {
+  flex: none;
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  background: #f3f3f3;
+  border-bottom: 0.5px solid #e5e5e5;
+  scrollbar-width: none;
+}
+.vsc-tab {
+  flex: none;
+  display: flex;
+  align-items: center;
+  border-right: 0.5px solid #e5e5e5;
+  color: #6f6f6f;
+}
+.vsc-tab.active {
+  background: #fff;
+  color: #1f1f1f;
+  box-shadow: inset 0 1px 0 #005fb8;
+}
+.vsc-tab-name {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px 0 12px;
+}
+.vsc-tab-close {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  border-radius: 5px;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease);
+}
+.vsc-tab.active .vsc-tab-close,
+.vsc-tab:hover .vsc-tab-close,
+.vsc-tab-close:focus-visible {
+  opacity: 0.7;
+}
+.vsc-tab-close:hover {
+  background: #e0e0e0;
+}
+.vsc-gh {
+  flex: none;
+  align-self: center;
+  margin: 0 10px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: #005fb8;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: filter 0.18s var(--ease);
+}
+.vsc-gh:hover {
+  filter: brightness(1.1);
+}
+.vsc-crumbs {
+  flex: none;
+  display: flex;
+  gap: 14px;
+  padding: 6px 16px;
+  font-size: 12.5px;
+  color: #6f6f6f;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.vsc-crumb-note {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #9a9a9a;
+}
+.vsc-editor {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.vsc-empty {
+  padding: 40px 24px;
+  color: #8a8a8a;
+}
+.vsc-code pre {
+  margin: 0;
+  padding: 4px 0 24px;
+  background: #fff !important;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+.vsc-code code {
+  counter-reset: line;
+  display: block;
+}
+.vsc-code .line {
+  display: inline-block;
+  min-width: 100%;
+  padding-right: 24px;
+}
+.vsc-code .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 3.2em;
+  margin-right: 1.6em;
+  text-align: right;
+  color: #a0a0a0;
+  user-select: none;
+}
+.vsc-status {
+  flex: none;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 12px;
+  background: #005fb8;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+}
+@container vsc (max-width: 620px) {
+  .vsc {
+    grid-template-columns: 1fr;
+  }
+  .vsc-side,
+  .vsc-crumb-note {
+    display: none;
+  }
+}
+
 /* ---------- папка iOS (телефон) ---------- */
 .iosf {
   position: fixed;
@@ -1235,6 +1469,11 @@ body {
   .menubar {
     height: 34px;
     padding: 0 10px;
+    font-size: 13.5px;
+  }
+  .dock-item .app-img {
+    width: 58px;
+    height: 58px;
   }
   .icons {
     inset: 50px 0 120px;

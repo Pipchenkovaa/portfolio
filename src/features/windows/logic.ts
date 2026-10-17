@@ -3,7 +3,7 @@
  * Effector-модель (model.ts) только связывает эти функции с событиями.
  */
 
-export type AppKind = 'project' | 'finder' | 'early' | 'about' | 'ask' | 'terminal' | 'resume' | 'mail';
+export type AppKind = 'project' | 'finder' | 'early' | 'about' | 'ask' | 'terminal' | 'resume' | 'mail' | 'code';
 
 export interface Rect {
   x: number;
@@ -48,6 +48,7 @@ export const DEFAULT_SIZE: Record<AppKind, { w: number; h: number }> = {
   terminal: { w: 620, h: 400 },
   resume: { w: 760, h: 760 },
   mail: { w: 600, h: 500 },
+  code: { w: 1040, h: 660 },
 };
 
 export const emptyState: WindowsState = { windows: [], zTop: 0 };

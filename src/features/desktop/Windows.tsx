@@ -5,6 +5,7 @@ import { getProject, projects } from '@/content/projects';
 import { profile } from '@/content/profile';
 import { pick } from '@/i18n/config';
 import { AskView } from '@/features/apps/AskView';
+import { CodeView } from '@/features/apps/CodeView';
 import { MailCompose } from '@/features/apps/MailCompose';
 import { ProjectView } from '@/features/apps/ProjectView';
 import { TerminalView } from '@/features/apps/TerminalView';
@@ -77,6 +78,12 @@ function WindowFor({ win, isTop }: { win: WindowState; isTop: boolean }) {
       return (
         <Window win={win} isTop={isTop} title={dict.terminal.title}>
           <TerminalView onMail={mail} />
+        </Window>
+      );
+    case 'code':
+      return (
+        <Window win={win} isTop={isTop} title={dict.code.title} bodyClassName="!overflow-hidden">
+          <CodeView />
         </Window>
       );
     case 'mail':

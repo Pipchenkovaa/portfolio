@@ -49,6 +49,7 @@ const raw = [
       hero: '/media/atlas-ir/hero',
       thumb: '/media/atlas-ir/thumb.webp',
       loop: '/media/atlas-ir/loop.mp4',
+      icon: { desk: '/icons/atlas-ir-1', phone: '/icons/atlas-ir-2' },
     },
     gallery: [
       {

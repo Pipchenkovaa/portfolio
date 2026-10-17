@@ -7,7 +7,7 @@ import { getProject } from '@/content/projects';
 import { profile } from '@/content/profile';
 import type { AppKind } from '@/features/windows/logic';
 import { $windows, windowFocused } from '@/features/windows/model';
-import { AskAppIcon, GitHubAppIcon, MailAppIcon, ProjectsAppIcon, TelegramAppIcon } from '@/shared/app-icons';
+import { ImageAppIcon } from '@/shared/app-icons';
 import { useI18n } from '@/shared/i18n-context';
 import { useOpen } from './useOpen';
 
@@ -33,22 +33,30 @@ export function Dock() {
         className="desktop-only"
         onClick={(el) => launch('finder', el)}
       >
-        <ProjectsAppIcon />
+        <ImageAppIcon name="projects" />
+      </DockButton>
+      <DockButton
+        label={dict.dock.code}
+        running={running.has('code')}
+        className="desktop-only"
+        onClick={(el) => launch('code', el)}
+      >
+        <ImageAppIcon name="vscode" />
       </DockButton>
       <DockButton label={dict.dock.ask} running={running.has('ask')} onClick={(el) => launch('ask', el)}>
-        <AskAppIcon />
+        <ImageAppIcon name="ask" />
       </DockButton>
       <span className="dock-sep" aria-hidden="true" />
       <DockButton label={dict.dock.mail} running={running.has('mail')} onClick={(el) => launch('mail', el)}>
-        <MailAppIcon />
+        <ImageAppIcon name="mail" />
       </DockButton>
       <a className="dock-item" href={profile.telegram} target="_blank" rel="noopener noreferrer">
-        <TelegramAppIcon />
+        <ImageAppIcon name="telegram" />
         <span className="tip glass">{dict.dock.telegram}</span>
         <span className="sr-only">{dict.dock.telegram}</span>
       </a>
       <a className="dock-item" href={profile.github} target="_blank" rel="noopener noreferrer">
-        <GitHubAppIcon />
+        <ImageAppIcon name="github" />
         <span className="tip glass">{dict.dock.github}</span>
         <span className="sr-only">{dict.dock.github}</span>
       </a>

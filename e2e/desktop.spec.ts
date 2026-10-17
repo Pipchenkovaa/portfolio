@@ -131,3 +131,21 @@ test('recruiter mode lists cases and opens them in place', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Atlas IR' })).toBeVisible();
   await expect(page.locator('.win')).toHaveCount(0);
 });
+
+test.describe('source window', () => {
+  test.skip(({ isMobile }) => isMobile, 'desktop-only behaviour');
+
+  test('VS Code in the dock shows this site’s real source, read-only', async ({ page }) => {
+    await page.goto('/en/');
+    await page.waitForSelector('html[data-ready]');
+    await page.getByRole('button', { name: 'VS Code' }).click();
+    const win = page.locator('[data-window="code"]');
+    await expect(win.locator('.vsc-code')).toContainText('export function Window');
+    await win.getByRole('button', { name: 'logic.ts', exact: true }).click();
+    await expect(win.locator('.vsc-code')).toContainText('export function routeFor');
+    await expect(win.getByRole('link', { name: /Open on GitHub/ })).toHaveAttribute(
+      'href',
+      'https://github.com/Pipchenkovaa/portfolio/blob/main/src/features/windows/logic.ts',
+    );
+  });
+});

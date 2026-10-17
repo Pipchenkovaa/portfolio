@@ -15,6 +15,8 @@ export const profile = profileSchema.parse({
   email: 'pipchenkova0701@gmail.com',
   telegram: 'https://t.me/pip_ch',
   github: 'https://github.com/Pipchenkovaa',
+  /** Репозиторий этого сайта — на него ведёт окно VS Code. */
+  repo: 'https://github.com/Pipchenkovaa/portfolio',
   resumePdf: '/resume.pdf',
   skills: [
     'TypeScript',

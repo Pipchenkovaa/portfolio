@@ -28,6 +28,10 @@ export const projectSchema = z.object({
     thumb: z.string().startsWith('/').optional(),
     /** /media/<slug>/hero — база имени, файлы hero.avif/hero.webp готовит scripts/media.mjs */
     hero: z.string().startsWith('/').optional(),
+    /** Своя иконка вместо превью: база имени в /icons (<base>@1x/@2x/@3x.webp, готовит scripts/icons.mjs) */
+    icon: z
+      .object({ desk: z.string().startsWith('/'), phone: z.string().startsWith('/').optional() })
+      .optional(),
   }),
   /** Экраны кейса: src — база имени (<src>-800/-1600 .avif/.webp), размеры исходника — от них зависит соотношение сторон. */
   gallery: z
@@ -59,6 +63,7 @@ export const profileSchema = z.object({
   email: z.email(),
   telegram: z.url(),
   github: z.url(),
+  repo: z.url(),
   resumePdf: z.string().startsWith('/'),
   skills: z.array(z.string()).min(1),
   siteUrl: z.url(),

@@ -2,7 +2,7 @@
 
 import { useUnit } from 'effector-react';
 import { $notices, noticeDismissed } from '@/features/notifications/model';
-import { MailAppIcon } from '@/shared/app-icons';
+import { ImageAppIcon } from '@/shared/app-icons';
 
 export function Notices() {
   const { notices, dismiss } = useUnit({ notices: $notices, dismiss: noticeDismissed });
@@ -10,7 +10,7 @@ export function Notices() {
     <div className="notices" aria-live="polite">
       {notices.map((n) => (
         <button key={n.id} type="button" className="notice glass" onClick={() => dismiss(n.id)}>
-          <MailAppIcon size={36} />
+          <ImageAppIcon name="mail" size={36} />
           <span className="flex-1">
             <span className="n-head">
               <span>{n.app}</span>
